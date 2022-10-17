@@ -5,7 +5,7 @@ import json
 # Read refresh token from file
 f = open("rt.secret", "r")
 token = f.readline()
- 
+
 # Get data access token for subsequent requests
 get_data_access_token_url = 'https://api.eloverblik.dk/CustomerApi/api/token'
 headers = {
@@ -16,7 +16,7 @@ headers = {
 response = requests.get(get_data_access_token_url, headers=headers)
 data_access_token = response.json()['result']
 
-print(data_access_token)
+print('---- retrieved access token ----\n')
 
 # Get id of first meter - edit if you have more than one meter
 metering_points_url = 'https://api.eloverblik.dk/CustomerApi/api/meteringpoints/meteringpoints'
@@ -31,6 +31,7 @@ if meters.status_code != 200:
 
 first_meter = meters.json()['result'][0]['meteringPointId']
 
+print('---- retrieved meter id ----\n')
 print('meter id: ')
 print(first_meter)
 
@@ -54,12 +55,12 @@ meter_json = {
  
 meter_data_response = requests.post(meter_data_url, headers=headers, json=meter_json)
 
-if meter_data_response.status_code == 503:
-    print("METER Lookup failed")
+if meter_data_response.status_code != 200:
+    print("Data lookup failed")
     exit()
 
 meter_json = json.loads(meter_data_response.text)
 meter_json_formatted = json.dumps(meter_json, indent=2)
 print(meter_json_formatted)
 
- 
+## TODO post to Humio
