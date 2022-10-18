@@ -2,6 +2,8 @@
 import requests
 import json
 
+
+
 # Read refresh token from file
 f = open("rt.secret", "r")
 token = f.readline()
@@ -37,11 +39,14 @@ print('meter id: ')
 print(first_meter)
 
 #Try to get data
+dMinus4 = date.today() - timedelta(days=4)
+dMinus3 = date.today() - timedelta(days=3)
+
 meter_data = 'https://api.eloverblik.dk/CustomerApi/api/meterdata/gettimeseries/'
 timeseries_data = {
-    'dateFrom': '2022-10-10',
-    'dateTo': '2022-10-11',
-    'aggregation': 'Actual'
+    'dateFrom': str(dMinus4.year)+'-'+str(dMinus4.month)+'-'+str(dMinus4.day),
+    'dateTo': str(dMinus3.year)+'-'+str(dMinus3.month)+'-'+str(dMinus3.day),
+    'aggregation': 'Hour'
 }
  
 meter_data_url = meter_data + timeseries_data['dateFrom'] + '/' + timeseries_data['dateTo'] + '/' + timeseries_data['aggregation']
