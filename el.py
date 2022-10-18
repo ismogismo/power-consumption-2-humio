@@ -27,6 +27,7 @@ headers = {
 meters = requests.get(metering_points_url, headers=headers)
 if meters.status_code != 200:
     print('FAILED getting metering id')
+    print(meters.status_code)
     exit()
 
 first_meter = meters.json()['result'][0]['meteringPointId']
@@ -57,6 +58,7 @@ meter_data_response = requests.post(meter_data_url, headers=headers, json=meter_
 
 if meter_data_response.status_code != 200:
     print("Data lookup failed")
+    print(meter_data_response.status_code)
     exit()
 
 meter_json = json.loads(meter_data_response.text)
