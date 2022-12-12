@@ -1,7 +1,8 @@
 # https://api.eloverblik.dk/CustomerApi/swagger/index.html
 import requests
 import json
-
+from datetime import timedelta
+from datetime import date
 
 
 # Read refresh token from file
@@ -16,6 +17,7 @@ headers = {
 }
 
 response = requests.get(get_data_access_token_url, headers=headers)
+print("get access token status code" + str(response.status_code))
 data_access_token = response.json()['result']
 
 print('---- retrieved access token ----\n')
@@ -71,3 +73,26 @@ meter_json_formatted = json.dumps(meter_json, indent=2)
 print(meter_json_formatted)
 
 ## TODO post to Humio
+#raw post 
+
+humio_url_base="https://cloud.community.humio.com/"
+#humio_raw_path="api/v1/ingest/raw" #goto unstructured
+humio_unstructured_path="/api/v1/ingest/humio-unstructured"
+humio_post_url=humio_url_base+humio_unstructured_path
+humio_ingest_token= "a5b0800d-fcde-4af0-852e-f56bc8bcf348"
+headersHumio = {
+    'accept': 'application/json',
+    'Authorization': 'Bearer ' + humio_ingest_token,
+}
+
+
+humio_post_response = requests.get(humio_post_url, headers=headersHumio, json=meter_json_formatted)
+print(humio_post_response)
+
+#Hvordan kan GET give mening som ingest ???
+
+#
+#curl https://cloud.community.humio.com/YOUR_HUMIO_URL/api/v1/ingest/raw \
+#     -X POST \
+#     -H "Authorization: Bearer $INGEST_TOKEN" \
+#     -d 'My raw Message generated at "2016-06-06T12:00:00+02:00"'
