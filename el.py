@@ -76,17 +76,18 @@ print(meter_json_formatted)
 #raw post 
 
 humio_url_base="https://cloud.community.humio.com/"
-#humio_raw_path="api/v1/ingest/raw" #goto unstructured
+humio_raw_path="api/v1/ingest/raw" #goto unstructured
 humio_unstructured_path="/api/v1/ingest/humio-unstructured"
-humio_post_url=humio_url_base+humio_unstructured_path
-humio_ingest_token= "a5b0800d-fcde-4af0-852e-f56bc8bcf348"
+humio_post_url=humio_url_base+humio_raw_path#+humio_unstructured_path
+humio_ingest_token= "0162b105-25d7-48d0-b1ad-cd387e6e5948"
 headersHumio = {
     'accept': 'application/json',
     'Authorization': 'Bearer ' + humio_ingest_token,
 }
 
-
-humio_post_response = requests.get(humio_post_url, headers=headersHumio, json=meter_json_formatted)
+print("calling humio with: " + meter_json_formatted)
+humio_post_response = requests.post(humio_post_url, headers=headersHumio, json=meter_json_formatted)
+#humio_post_response = requests.post(humio_post_url, headers=headersHumio, json="{hest}")
 print(humio_post_response)
 
 #Hvordan kan GET give mening som ingest ???
